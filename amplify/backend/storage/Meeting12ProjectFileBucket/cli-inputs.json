@@ -1,0 +1,15 @@
+{
+  "resourceName": "Meeting12ProjectFileBucket",
+  "policyUUID": "2ce7a3a4",
+  "bucketName": "meeting12project2fc1b5c1a99e437eb9029f8eb4f635e",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE"
+}

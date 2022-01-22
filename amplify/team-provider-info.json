@@ -1,0 +1,58 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-meeting12project-dev-104007-authRole",
+      "UnauthRoleArn": "arn:aws:iam::299608670017:role/amplify-meeting12project-dev-104007-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::299608670017:role/amplify-meeting12project-dev-104007-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-meeting12project-dev-104007-deployment",
+      "UnauthRoleName": "amplify-meeting12project-dev-104007-unauthRole",
+      "StackName": "amplify-meeting12project-dev-104007",
+      "StackId": "arn:aws:cloudformation:us-east-2:299608670017:stack/amplify-meeting12project-dev-104007/65b4bb90-4e7b-11ec-bdc6-0641baddc2b0",
+      "AmplifyAppId": "d29hxncvvmsged",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-meeting12project-dev-104007-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "auth": {
+        "meeting12projectresource": {},
+        "userPoolGroups": {},
+        "true": {}
+      },
+      "function": {
+        "meeting12projectresourceCustomMessage": {
+          "REDIRECTURL": "http://localhost:3000",
+          "EMAILSUBJECT": "Confirm your account",
+          "EMAILMESSAGE": "Click this link to verify your account",
+          "deploymentBucketName": "amplify-meeting12project-dev-104007-deployment",
+          "s3Key": "amplify-builds/meeting12projectresourceCustomMessage-2f6a527a2b53556a4f38-build.zip"
+        },
+        "meeting12projectresourcePostConfirmation": {
+          "deploymentBucketName": "amplify-meeting12project-dev-104007-deployment",
+          "s3Key": "amplify-builds/meeting12projectresourcePostConfirmation-5532613656704b744939-build.zip",
+          "spaceadmin": "SpaceAdmin-2inb7xf3wncjxnemvugcf6pygm-dev",
+          "usertable": "User-2inb7xf3wncjxnemvugcf6pygm-dev"
+        },
+        "meeting12projectresourcePreAuthentication": {
+          "deploymentBucketName": "amplify-meeting12project-dev-104007-deployment",
+          "s3Key": "amplify-builds/meeting12projectresourcePreAuthentication-53667a336a5247616133-build.zip",
+          "usertable": "User-2inb7xf3wncjxnemvugcf6pygm-dev"
+        },
+        "meeting12projectresourcePreSignup": {
+          "deploymentBucketName": "amplify-meeting12project-dev-104007-deployment",
+          "s3Key": "amplify-builds/meeting12projectresourcePreSignup-76553941744969357675-build.zip",
+          "spaceadmin": "SpaceAdmin-2inb7xf3wncjxnemvugcf6pygm-dev"
+        },
+        "meeting12seslambda": {
+          "deploymentBucketName": "amplify-meeting12project-dev-104007-deployment",
+          "s3Key": "amplify-builds/meeting12seslambda-79457448656246534677-build.zip"
+        }
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d29hxncvvmsged",
+          "type": "manual"
+        }
+      }
+    }
+  }
+}

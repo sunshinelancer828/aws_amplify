@@ -1,0 +1,89 @@
+type SpaceAdmin @model {
+  id: ID!
+  organization: String!
+  firstname: String
+  lastname: String
+  email: String
+}
+
+type User @model 
+  @key(name: "usersByOrganization", fields: ["organization"], queryField: "usersByOrganization") {
+  id: ID!
+  name: String
+  firstname: String
+  lastname: String
+  avatar: String
+  organization: String
+  email: String
+  phonenumber: String
+  address: String
+  bio: String
+  role: String
+  term: String
+  isadmin: String
+}
+
+type Candidate 
+  @model 
+  @auth(rules: [{ allow: public, operations: [create] }]) {
+   id: ID!
+   sourceid: String
+   fromemail: String
+   toemail: String
+   organization: String
+   firstname: String
+   lastname: String
+}
+
+type UserGroup @model
+   @key(name: "usergroupsByOrganization", fields: ["organization"], queryField: "usergroupsByOrganization")
+   @key(name: "usergroupsByUserID", fields: ["userid"], queryField: "usergroupsByUserID"){
+   id: ID!
+   groupname: String
+   groupadminid: String
+   userid: ID!
+   userdata: User @connection(fields: ["userid"])
+   organization: String
+}
+
+type Folder @model @searchable
+  {
+  id: ID!
+  name: String
+  ownerid: String
+  ownername: String
+  comments: String
+  description: String
+  organization: String
+  files: [File] @connection(keyName: "byFolder", fields: ["id"])
+  restrictions: [FolderRestriction] @connection(keyName: "byFolderRestriction", fields: ["id"])
+}
+
+type File @model @searchable
+  @key(name: "byFolder", fields: ["folderID"]){
+  id: ID!
+  name: String
+  ownerid: String
+  ownername: String
+  folderID: ID!
+  comments: String
+  description: String
+  src: String
+  restrictions: [FileRestriction] @connection(keyName: "byFileRestriction", fields: ["id"])
+}
+
+type FolderRestriction @model
+  @key(name: "byFolderRestriction", fields: ["folderID"]){
+  id: ID!
+  groupname: String
+  role: String
+  folderID: ID!
+}
+
+type FileRestriction @model
+  @key(name: "byFileRestriction", fields: ["fileID"]){
+  id: ID!
+  groupname: String
+  role: String
+  fileID: ID!
+}

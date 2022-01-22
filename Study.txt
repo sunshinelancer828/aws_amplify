@@ -1,0 +1,286 @@
+https://blog.arturofm.com/amplify-add-user-to-dynamodb-using-a-cognito-post-confirmation-lambda-trigger/
+
+https://stackoverflow.com/questions/58614067/aws-cognito-add-user-to-a-group-from-lambda
+
+https://www.linkedin.com/pulse/aws-amplify-adding-user-group-programmatically-guillermo-misa-iii
+
+export function afterConfirmationTrigger(event, context, callback) {
+  const params = {
+    GroupName: "Owners",
+    UserPoolId: event.userPoolId,
+    Username: event.userName
+  };
+
+  CognitoIdentityServiceProvider.adminAddUserToGroup(params)
+    .promise()
+    .then(res => callback(null, event))
+    .catch(err => callback(err, event));
+}
+
+
+////////////////////////////////////////
+
+import {Callback, Context, PostConfirmationTriggerEvent} from 'aws-lambda';
+import AWS from 'aws-sdk';
+
+export async function main(
+  event: PostConfirmationTriggerEvent,
+  _context: Context,
+  callback: Callback,
+): Promise<void> {
+  const {userPoolId, userName} = event;
+
+  try {
+    await adminAddUserToGroup({
+      userPoolId,
+      username: userName,
+      groupName: 'Users',
+    });
+
+    return callback(null, event);
+  } catch (error) {
+    return callback(error, event);
+  }
+}
+
+export function adminAddUserToGroup({
+  userPoolId,
+  username,
+  groupName,
+}: {
+  userPoolId: string;
+  username: string;
+  groupName: string;
+}): Promise<{
+  $response: AWS.Response<Record<string, string>, AWS.AWSError>;
+}> {
+  const params = {
+    GroupName: groupName,
+    UserPoolId: userPoolId,
+    Username: username,
+  };
+
+  const cognitoIdp = new AWS.CognitoIdentityServiceProvider();
+  return cognitoIdp.adminAddUserToGroup(params).promise();
+}
+
+
+/////////////////////////////////////////
+
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
+
+export default function TemporaryDrawer() {
+  const [state, setState] = React.useState({
+    top: false,
+    left: false,
+    bottom: false,
+    right: false,
+  });
+
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+
+    setState({ ...state, [anchor]: open });
+  };
+
+  const list = (anchor) => (
+    <Box
+      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+      role="presentation"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <List>
+        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>
+              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+            </ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        {['All mail', 'Trash', 'Spam'].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>
+              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+            </ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+
+  return (
+    <div>
+      {['left', 'right', 'top', 'bottom'].map((anchor) => (
+        <React.Fragment key={anchor}>
+          <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button>
+          <Drawer
+            anchor={anchor}
+            open={state[anchor]}
+            onClose={toggleDrawer(anchor, false)}
+          >
+            {list(anchor)}
+          </Drawer>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+<Box
+        component="nav"
+        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        aria-label="mailbox folders"
+      >
+        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+        <Drawer
+          container={container}
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            display: { xs: 'block', sm: 'none' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          }}
+        >
+          {drawer}
+        </Drawer>
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: 'none', sm: 'block' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          }}
+          open
+        >
+          {drawer}
+        </Drawer>
+      </Box>
+
+
+import CssBaseline from '@mui/material/CssBaseline';
+
+<Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        sx={{
+          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          ml: { sm: `${drawerWidth}px` },
+        }}
+      >
+        <Toolbar>
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+import React, {useEffect, useState, useRef} from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getSettings } from '../../actions/setting';
+import { Button, Grid, Typography } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import TextField from '@mui/material/TextField';
+import { WELCOME_TEXT } from '../../actions/type';
+import { useStyles } from './style';
+import { setting } from '../../actions/setting';
+
+const Settings = () => {
+    const dispatch = useDispatch();
+    const [image, setImage] = useState('');
+    const [preview, setPreview] = useState();
+    const fileInputRef = useRef();
+    const { logoUrl, welcomeText } = useSelector(state => state.setting)
+    const classes = useStyles();
+
+    useEffect(() => {
+        if (image) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreview(reader.result);
+            };
+            reader.readAsDataURL(image);
+        } else {
+            setPreview(null)
+        }
+        // eslint-disable-next-line
+    }, [image]);
+
+    useEffect(() => {
+        setPreview(logoUrl);
+        // eslint-disable-next-line
+    }, [logoUrl])
+
+    useEffect(() => {
+        dispatch(getSettings());
+        // eslint-disable-next-line
+    }, [])
+
+    const handleFile = (event) => {
+        const file = event.target.files[0];
+        if (file && file.type.substr(0, 5) === "image") {
+            setImage(file);
+        } else {
+            setImage(null);
+        }
+    }
+
+    const handleChange = (e) => {
+        dispatch({ type: WELCOME_TEXT, payload: e.target.value});
+    }
+
+    const handleAccept = () => {
+        var formData = new FormData();
+        formData.append('logoUrl', image);
+        formData.append('welcomeText', welcomeText)
+        dispatch(setting(formData));
+    }
+
+    return (
+        <Grid container justifyContent="center" direction="column" alignItems="center">
+            <Typography className={classes.title}>settings</Typography>
+            <TextField id="outlined-basic" label="Welcome text" variant="outlined" onChange={handleChange} value={welcomeText} className={classes.inputStyle}/>
+            <img src={preview} alt={"preview"} className={classes.imageStyle} />
+            <Button
+                className={classes.buttonStyle}
+                variant="contained"
+                startIcon={<CloudUploadIcon />}
+                onClick={(event) => {
+                    event.preventDefault();
+                    fileInputRef.current.click();
+                }}
+            >
+                upload logo
+            </Button>
+            <input type="file" style={{ display: "none" }}
+                ref={fileInputRef}
+                accept="image/*"
+                onChange={handleFile}
+            />
+            <Button variant="contained" color="success" className={classes.accept} onClick={handleAccept}>Accept</Button>
+    
+        </Grid>
+    )
+}
+
+export default Settings
